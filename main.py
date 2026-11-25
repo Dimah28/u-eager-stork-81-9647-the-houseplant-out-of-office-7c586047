@@ -72,6 +72,11 @@ def main() -> None:
     # Write exactly the line: no trailing newline, the judge reads
     # exactly the bytes in the file.
     output_path.write_text(LINE, encoding="utf-8")
+    # Read back and confirm what landed on disk is exactly the
+    # validated line: a silent encoding or filesystem surprise here
+    # would otherwise ship an entry the gate refuses.
+    if output_path.read_bytes() != LINE.encode("utf-8"):
+        raise SystemExit("entry.txt on disk does not match the validated line")
 
 
 if __name__ == "__main__":
